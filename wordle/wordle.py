@@ -1,20 +1,34 @@
 import tkinter as tk
-
-def limpiar_frame(frame):
+from tkinter import messagebox
+def limpiar_frame(frame, texto):
     # Limpia el frame
     for item in frame.winfo_children():
         item.destroy()
 
     # Imprime el titulo
-    titulo = tk.Label(frame, text="Wordle", bg="white", font=("Comic Sans MS", 30, "bold"))
+    titulo = tk.Label(frame, text=texto, bg="white", font=("Comic Sans MS", 30, "bold"))
     titulo.pack()
 
 def tablero_inicial(num_letras,frame):
+    def mostrar_ventana_exito(aciertos):
+        respuesta = messagebox.askyesno("¡Éxito!", "¡Has acertado la palabra! ¿Quieres jugar de nuevo?")
+        if respuesta:
+            texto_wordle.set("")
+            aciertos = str(int(aciertos) + 1)
+            # Borra el contenido del Entry
+            menu_inicial(frame)
+        else:
+            ventana.quit()  # Cierra la aplicación
+    def verificar_palabra(event):
+        palabra_ingresada = texto_wordle.get()
+        palabra_elegida = "MESSI"
+        if palabra_ingresada == palabra_elegida:
+            mostrar_ventana_exito(aciertos)
     def limitar_longitud(*args):
         texto = texto_wordle.get()
         if len(texto) > num_letras:
             texto_wordle.set(texto[:num_letras])
-    limpiar_frame(frame)
+    limpiar_frame(frame, "Wordle")
     frame_entry = tk.Frame(frame, bg="white")
     frame_entry.pack(fill="both", expand=True, padx=10, pady=10)
     texto_wordle = tk.StringVar()
@@ -39,18 +53,11 @@ def tablero_inicial(num_letras,frame):
     label_fallos.grid(row=1, column=0, padx=5, pady=5)
     text_fallos = tk.Label(frame_marcadores, font=("Comic Sans MS", 10), text=fallos)
     text_fallos.grid(row=1, column=1, padx=5, pady=5)
+    entry_wordle.bind("<Return>", verificar_palabra)
 
-def menu_inicial():
-    ventana = tk.Tk()
-    ventana.title("Wordle")
-    ventana.resizable(0,0)
 
-    frame = tk.Frame(ventana, bg="white")
-    frame.pack(fill="both", expand=True)
-
-    label_text1 = tk.Label(frame, text="Elije el numero de letras para jugar", anchor="center",fg="black", font=("Comic Sans MS", 30, "bold"), bg= "white")
-    label_text1.pack(pady=10)
-
+def menu_inicial(frame):
+    limpiar_frame(frame, "Elije el numero de letras para jugar")
     label_botones = tk.Label(frame)
     label_botones.pack(pady=10)
     boton_1 = tk.Button(label_botones, text="4 letras",font=("Comic Sans MS", 15), command= lambda: tablero_inicial(4, frame))
@@ -64,8 +71,12 @@ def menu_inicial():
     boton_5 = tk.Button(label_botones, text="8 letras", font=("Comic Sans MS", 15), command= lambda: tablero_inicial(8, frame))
     boton_5.grid(row = 0, column = 4, padx = 10)
 
+ventana = tk.Tk()
+ventana.title("Wordle")
+ventana.resizable(0,0)
+frame = tk.Frame(ventana, bg="white")
+frame.pack(fill="both", expand=True)
+menu_inicial(frame)
+ventana.mainloop()
 
-    ventana.mainloop()
 
-
-menu_inicial()
