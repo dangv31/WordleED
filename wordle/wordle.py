@@ -58,9 +58,19 @@ def tablero_inicial(num_letras, frame):
                 fila = 0
                 for palabra in palabras_ingresadas:
                     for i, letra in enumerate(palabra):
-                        label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2,
-                                                   height=1, relief="solid")
-                        label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+                        
+                        if palabra[i] == palabra_aleatoria[i]:
+                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="green")
+                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+
+                        elif (palabra[i] in palabra_aleatoria) and palabra[i] != palabra_aleatoria[i]:
+                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="yellow")
+                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+                            
+                        else:
+                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid")
+                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+                            
                     fila += 1
         if len(palabras_ingresadas) == 6 and palabra_ingresada != palabra_aleatoria:
             mostrar_ventana_fallo()
