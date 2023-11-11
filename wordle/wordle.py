@@ -21,6 +21,17 @@ def tablero_inicial(num_letras, frame):
         else:
             ventana.quit()
 
+    def mostrar_ventana_fallo():
+        global fallos
+        respuesta = messagebox.askyesno("¡Se acabaron los intentos!", "¡No has acertado la palabra! ¿Quieres jugar de nuevo?")
+        if respuesta:
+            texto_wordle.set("")
+            fallos = str(int(fallos) + 1)
+            print(aciertos)
+            menu_inicial(frame)
+        else:
+            ventana.quit()
+
     def elegir_palabra(num_letras):
         import random
         archivo_palabras = f"{num_letras}letras.txt"
@@ -53,6 +64,8 @@ def tablero_inicial(num_letras, frame):
                                                    height=1, relief="solid")
                         label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
                     fila += 1
+            else:
+                mostrar_ventana_fallo()
 
         if palabra_ingresada == palabra_aleatoria:
             mostrar_ventana_exito()
