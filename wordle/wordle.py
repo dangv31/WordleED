@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+
 def limpiar_frame(frame, texto):
     # Limpia el frame
     for item in frame.winfo_children():
@@ -19,19 +20,23 @@ def tablero_inicial(num_letras,frame):
             menu_inicial(frame)
         else:
             ventana.quit()  # Cierra la aplicación
+            
     def verificar_palabra(event):
         palabra_ingresada = texto_wordle.get()
         palabra_elegida = "MESSI"
         if palabra_ingresada == palabra_elegida:
             mostrar_ventana_exito(aciertos)
+            
     def convertir_mayuscula(event):
         contenido = entry_wordle.get()
         entry_wordle.delete(0, tk.END)
         entry_wordle.insert(0, contenido.upper())
+        
     def limitar_longitud(*args):
         texto = texto_wordle.get()
         if len(texto) > num_letras:
             texto_wordle.set(texto[:num_letras])
+            
     limpiar_frame(frame, "Wordle")
     frame_entry = tk.Frame(frame, bg="white")
     frame_entry.pack(fill="both", expand=True, padx=10, pady=10)
