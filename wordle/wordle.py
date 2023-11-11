@@ -21,9 +21,26 @@ def tablero_inicial(num_letras,frame):
         else:
             ventana.quit()  # Cierra la aplicación
             
+    def elegir_palabra(num_letras):
+        import random
+        archivo_palabras = f"{num_letras}letras.txt"
+
+        try:
+            with open(archivo_palabras, "r", encoding="utf-8") as archivo:
+                palabras = archivo.read().splitlines()
+            
+                if palabras:
+                    palabra_elegida = random.choice(palabras)
+                    return palabra_elegida
+                else:
+                    return None
+
+        except FileNotFoundError:
+            return None
+
     def verificar_palabra(event):
         palabra_ingresada = texto_wordle.get()
-        palabra_elegida = "MESSI"
+        palabra_elegida = elegir_palabra(num_letras)
         if palabra_ingresada == palabra_elegida:
             mostrar_ventana_exito(aciertos)
             
