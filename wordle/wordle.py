@@ -1,4 +1,5 @@
 import tkinter as tk
+from collections import deque
 from tkinter import messagebox
 
 def limpiar_frame(frame, texto):
@@ -39,10 +40,24 @@ def tablero_inicial(num_letras, frame):
 
     def verificar_palabra(event):
         palabra_ingresada = texto_wordle.get()
-        palabra_elegida = palabra_aleatoria
-        if palabra_ingresada == palabra_elegida:
-            mostrar_ventana_exito(aciertos)
+        if len(palabra_ingresada) == num_letras:
+            if len(palabras_ingresadas) <= 5:
+                palabras_ingresadas.append(palabra_ingresada)
+                fila = 0
+                for palabra in palabras_ingresadas:
+                    for i, letra in enumerate(palabra):
+                        label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2,
+                                                   height=1, relief="solid")
+                        label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+                    fila += 1
+                    print(fila)
 
+        if palabra_ingresada == palabra_aleatoria:
+            mostrar_ventana_exito()
+    def convertir_mayuscula(event):
+        contenido = entry_wordle.get()
+        entry_wordle.delete(0, tk.END)
+        entry_wordle.insert(0, contenido.upper())
     def limitar_longitud(*args):
         texto = texto_wordle.get()
         if len(texto) > num_letras:
@@ -56,9 +71,9 @@ def tablero_inicial(num_letras, frame):
     texto_wordle = tk.StringVar()
     texto_wordle.trace_add("write", limitar_longitud)
 
-    entry_wordle = tk.Entry(frame_entry, textvariable=texto_wordle, font=("Comic Sans MS", 15))
+    entry_wordle = tk.Entry(frame_entry, textvariable=texto_wordle, font=("Comic Sans MS", 15), justify="center")
     entry_wordle.pack(fill="both", expand=True, padx=10, pady=10)
-
+    palabras_ingresadas = deque()
     frame_tablero = tk.Frame(frame, bg="white")
     frame_tablero.pack(fill="both", expand=True, padx=10, pady=10)
 
@@ -84,7 +99,7 @@ def tablero_inicial(num_letras, frame):
 
     text_fallos = tk.Label(frame_marcadores, font=("Comic Sans MS", 10), text=fallos)
     text_fallos.grid(row=1, column=1, padx=5, pady=5)
-
+    entry_wordle.bind("<KeyRelease>", convertir_mayuscula)
     entry_wordle.bind("<Return>", verificar_palabra)
 
 def menu_inicial(frame):
