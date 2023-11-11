@@ -16,7 +16,6 @@ def tablero_inicial(num_letras, frame):
         if respuesta:
             texto_wordle.set("")
             aciertos = str(int(aciertos) + 1)
-            print(aciertos)
             menu_inicial(frame)
         else:
             ventana.quit()
@@ -27,7 +26,6 @@ def tablero_inicial(num_letras, frame):
         if respuesta:
             texto_wordle.set("")
             fallos = str(int(fallos) + 1)
-            print(aciertos)
             menu_inicial(frame)
         else:
             ventana.quit()
