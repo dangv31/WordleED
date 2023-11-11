@@ -1,7 +1,51 @@
 import tkinter as tk
 from collections import deque
 from tkinter import messagebox
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end_of_word = False
 
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+        self.count = 0
+
+    def insert(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            node = node.children[char]
+        if not node.is_end_of_word:
+            node.is_end_of_word = True
+            self.count += 1
+
+    def search(self, word):
+        node = self.root
+        for char in word:
+            if char not in node.children:
+                return False
+            node = node.children[char]
+        return node.is_end_of_word
+
+
+def cargar_palabras_en_arbol(num_letras):
+    trie = Trie()
+    archivo_palabras = f"{num_letras}letras.txt"
+
+    try:
+        with open(archivo_palabras, "r", encoding="utf-8") as archivo:
+            palabras = archivo.read().splitlines()
+
+            if palabras:
+                for palabra in palabras:
+                    trie.insert(palabra)
+
+    except FileNotFoundError:
+        pass
+
+    return trie
 def limpiar_frame(frame, texto):
     for item in frame.winfo_children():
         item.destroy()
@@ -52,30 +96,31 @@ def tablero_inicial(num_letras, frame):
     def verificar_palabra(event):
         print(palabra_aleatoria)
         palabra_ingresada = texto_wordle.get()
-        if len(palabra_ingresada) == num_letras:
-            if len(palabras_ingresadas) <= 5:
-                palabras_ingresadas.append(palabra_ingresada)
-                fila = 0
-                for palabra in palabras_ingresadas:
-                    for i, letra in enumerate(palabra):
-                        
-                        if palabra[i] == palabra_aleatoria[i]:
-                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="green")
-                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+        if globals()[f"trie_{len(palabra_aleatoria)}"].search(palabra_ingresada):
+            if len(palabra_ingresada) == num_letras:
+                if len(palabras_ingresadas) <= 5:
+                    palabras_ingresadas.append(palabra_ingresada)
+                    fila = 0
+                    for palabra in palabras_ingresadas:
+                        for i, letra in enumerate(palabra):
 
-                        elif (palabra[i] in palabra_aleatoria) and palabra[i] != palabra_aleatoria[i]:
-                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="yellow")
-                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
-                            
-                        else:
-                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid")
-                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
-                            
-                    fila += 1
-        if len(palabras_ingresadas) == 6 and palabra_ingresada != palabra_aleatoria:
-            mostrar_ventana_fallo()
-        if palabra_ingresada == palabra_aleatoria:
-            mostrar_ventana_exito()
+                            if palabra[i] == palabra_aleatoria[i]:
+                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="green")
+                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+
+                            elif (palabra[i] in palabra_aleatoria) and palabra[i] != palabra_aleatoria[i]:
+                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="yellow")
+                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+                                
+                            else:
+                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid")
+                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
+
+                        fila += 1
+            if len(palabras_ingresadas) == 6 and palabra_ingresada != palabra_aleatoria:
+                mostrar_ventana_fallo()
+            if palabra_ingresada == palabra_aleatoria:
+                mostrar_ventana_exito()
     def convertir_mayuscula(event):
         contenido = entry_wordle.get()
         entry_wordle.delete(0, tk.END)
@@ -142,6 +187,12 @@ def menu_inicial(frame):
 
     boton_5 = tk.Button(label_botones, text="8 letras", font=("Comic Sans MS", 15), command=lambda: tablero_inicial(8, frame))
     boton_5.grid(row=0, column=4, padx=10)
+
+trie_4 = cargar_palabras_en_arbol(4)
+trie_5 = cargar_palabras_en_arbol(5)
+trie_6 = cargar_palabras_en_arbol(6)
+trie_7 = cargar_palabras_en_arbol(7)
+trie_8 = cargar_palabras_en_arbol(8)
 
 ventana = tk.Tk()
 ventana.title("Wordle")
