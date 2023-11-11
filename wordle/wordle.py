@@ -64,9 +64,8 @@ def tablero_inicial(num_letras, frame):
                                                    height=1, relief="solid")
                         label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
                     fila += 1
-            else:
-                mostrar_ventana_fallo()
-
+        if len(palabras_ingresadas) == 6 and palabra_ingresada != palabra_aleatoria:
+            mostrar_ventana_fallo()
         if palabra_ingresada == palabra_aleatoria:
             mostrar_ventana_exito()
     def convertir_mayuscula(event):
