@@ -24,6 +24,10 @@ def tablero_inicial(num_letras,frame):
         palabra_elegida = "MESSI"
         if palabra_ingresada == palabra_elegida:
             mostrar_ventana_exito(aciertos)
+    def convertir_mayuscula(event):
+        contenido = entry_wordle.get()
+        entry_wordle.delete(0, tk.END)
+        entry_wordle.insert(0, contenido.upper())
     def limitar_longitud(*args):
         texto = texto_wordle.get()
         if len(texto) > num_letras:
@@ -33,8 +37,9 @@ def tablero_inicial(num_letras,frame):
     frame_entry.pack(fill="both", expand=True, padx=10, pady=10)
     texto_wordle = tk.StringVar()
     texto_wordle.trace_add("write", limitar_longitud)
-    entry_wordle = tk.Entry(frame_entry, textvariable=texto_wordle, font=("Comic Sans MS", 15))
+    entry_wordle = tk.Entry(frame_entry, textvariable=texto_wordle, font=("Comic Sans MS", 15), justify="center")
     entry_wordle.pack(fill="both", expand=True, padx=10, pady=10)
+    entry_wordle.bind("<KeyRelease>", convertir_mayuscula)
     frame_tablero = tk.Frame(frame, bg="white")
     frame_tablero.pack(fill="both", expand=True, padx=10, pady=10)
     for i in range(6):
