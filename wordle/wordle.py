@@ -10,11 +10,13 @@ def limpiar_frame(frame, texto):
     titulo.pack()
 
 def tablero_inicial(num_letras, frame):
-    def mostrar_ventana_exito(aciertos):
+    def mostrar_ventana_exito():
+        global aciertos
         respuesta = messagebox.askyesno("¡Éxito!", "¡Has acertado la palabra! ¿Quieres jugar de nuevo?")
         if respuesta:
             texto_wordle.set("")
             aciertos = str(int(aciertos) + 1)
+            print(aciertos)
             menu_inicial(frame)
         else:
             ventana.quit()
@@ -39,6 +41,7 @@ def tablero_inicial(num_letras, frame):
     palabra_aleatoria = elegir_palabra(num_letras)     
 
     def verificar_palabra(event):
+        print(palabra_aleatoria)
         palabra_ingresada = texto_wordle.get()
         if len(palabra_ingresada) == num_letras:
             if len(palabras_ingresadas) <= 5:
@@ -50,7 +53,6 @@ def tablero_inicial(num_letras, frame):
                                                    height=1, relief="solid")
                         label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
                     fila += 1
-                    print(fila)
 
         if palabra_ingresada == palabra_aleatoria:
             mostrar_ventana_exito()
@@ -85,8 +87,6 @@ def tablero_inicial(num_letras, frame):
     frame_marcadores = tk.Frame(frame, bg="white")
     frame_marcadores.pack()
 
-    aciertos = "0"
-    fallos = "0"
 
     label_aciertos = tk.Label(frame_marcadores, font=("Comic Sans MS", 10), bg="green", text="Aciertos:", fg="white")
     label_aciertos.grid(row=0, column=0, padx=5, pady=5)
@@ -128,6 +128,8 @@ ventana.title("Wordle")
 ventana.resizable(0, 0)
 frame = tk.Frame(ventana, bg="white")
 frame.pack(fill="both", expand=True)
+aciertos = "0"
+fallos = "0"
 menu_inicial(frame)
 ventana.mainloop()
 
