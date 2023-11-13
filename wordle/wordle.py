@@ -91,8 +91,10 @@ def tablero_inicial(num_letras, frame):
         except FileNotFoundError:
             return None  
         
-    palabra_aleatoria = elegir_palabra(num_letras)     
-
+    palabra_aleatoria = elegir_palabra(num_letras)
+    cont_aleatoria = dict()
+    for letra in palabra_aleatoria:
+        cont_aleatoria[letra] = palabra_aleatoria.count(letra)
     def verificar_palabra(event):
         print(palabra_aleatoria)
         palabra_ingresada = texto_wordle.get()
@@ -102,20 +104,21 @@ def tablero_inicial(num_letras, frame):
                     palabras_ingresadas.append(palabra_ingresada)
                     fila = 0
                     for palabra in palabras_ingresadas:
+                        cont_ingresada = dict()
+                        for letra in palabra:
+                            cont_ingresada[letra] = 0
                         for i, letra in enumerate(palabra):
-
+                            label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"),
+                                                   width=2, height=1, relief="solid", bg="white")
+                            label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
                             if palabra[i] == palabra_aleatoria[i]:
-                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="green")
-                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
-
-                            elif (palabra[i] in palabra_aleatoria) and palabra[i] != palabra_aleatoria[i]:
-                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid", bg="yellow")
-                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
-                                
+                                label_letra["bg"] = "green"
+                                cont_ingresada[letra] += 1
+                            elif palabra[i] in palabra_aleatoria and cont_ingresada[palabra[i]] < cont_aleatoria[palabra[i]]:
+                                label_letra["bg"] = "orange"
+                                cont_ingresada[letra] += 1
                             else:
-                                label_letra = tk.Label(frame_tablero, text=letra, font=("Comic Sans MS", 30, "bold"), width=2, height=1, relief="solid")
-                                label_letra.grid(row=fila, column=i, padx=5, pady=5, sticky="snew")
-
+                                label_letra["bg"] = "gray"
                         fila += 1
             if len(palabras_ingresadas) == 6 and palabra_ingresada != palabra_aleatoria:
                 mostrar_ventana_fallo()
